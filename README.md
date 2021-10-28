@@ -6,4 +6,4 @@ Also, I will do it not because I have nothing to do but to show you my Open Sour
 
 And I will write a cycle of articles about that and will update this readme after every publication.
 
-- Part I: Implementation of simple list of stocks with networking and with logic in isolates with my isolator package
+- [IN PROGRESS] Part I: Implementation of simple list of stocks with networking and with logic in isolates with my isolator package

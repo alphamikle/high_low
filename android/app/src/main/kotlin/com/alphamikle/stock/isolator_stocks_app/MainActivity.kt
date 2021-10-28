@@ -1,4 +1,4 @@
-package com.alphamikle.stock.isolator_stocks_app
+package com.alphamikle.high_low
 
 import io.flutter.embedding.android.FlutterActivity
 
