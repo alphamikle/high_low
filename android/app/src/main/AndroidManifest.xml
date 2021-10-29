@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.alphamikle.high_low">
    <application
-        android:label="isolator_stocks_app"
+        android:label="high_low"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
-project(isolator_stocks_app LANGUAGES CXX)
+project(high_low LANGUAGES CXX)
 
-set(BINARY_NAME "isolator_stocks_app")
+set(BINARY_NAME "high_low")
 
 cmake_policy(SET CMP0063 NEW)
 

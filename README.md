@@ -6,4 +6,7 @@ Also, I will do it not because I have nothing to do but to show you my Open Sour
 
 And I will write a cycle of articles about that and will update this readme after every publication.
 
+[Design inspiration](https://dribbble.com/shots/14651304-Stock-Page-Profile-Progress-for-Investment-App)
+[Data provider](https://finnhub.io/)
+
 - [IN PROGRESS] Part I: Implementation of simple list of stocks with networking and with logic in isolates with my isolator package

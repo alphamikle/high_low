@@ -92,10 +92,10 @@ BEGIN
             VALUE "CompanyName", "com.alphamikle" "\0"
             VALUE "FileDescription", "A project for cycle of articles about isolator and other packages of me" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "isolator_stocks_app" "\0"
+            VALUE "InternalName", "high_low" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2021 com.alphamikle All rights reserved." "\0"
-            VALUE "OriginalFilename", "isolator_stocks_app.exe" "\0"
-            VALUE "ProductName", "isolator_stocks_app" "\0"
+            VALUE "OriginalFilename", "high_low.exe" "\0"
+            VALUE "ProductName", "high_low" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
