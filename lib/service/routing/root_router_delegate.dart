@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:high_low/domain/main/main_view.dart';
+import 'package:high_low/domain/main/ui/main_view.dart';
 import 'package:high_low/service/di/di.dart';
 import 'package:high_low/service/logs/logs.dart';
 import 'package:high_low/service/routing/page_builder.dart';
