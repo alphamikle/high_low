@@ -12,5 +12,5 @@ void initDependencies() {
   Di.reg<RouterDelegate<Object>>(() => RootRouterDelegate());
   Di.reg(() => PageBuilder());
   Di.reg(() => Dio(), asBuilder: true);
-  Di.reg(() => FinhubProvider(dio: Di.get()), asBuilder: true);
+  Di.reg(() => FinhubProvider(Di.get()), asBuilder: true);
 }

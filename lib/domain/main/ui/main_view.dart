@@ -1,8 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:high_low/domain/finhub/dto/stock_item.dart';
 import 'package:high_low/domain/main/logic/main_frontend.dart';
 import 'package:high_low/domain/main/ui/main_header.dart';
+import 'package:high_low/domain/main/ui/stock_item_tile.dart';
 import 'package:provider/provider.dart';
 
 class MainView extends StatefulWidget {
@@ -13,10 +13,30 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
+  MainFrontend get _mainFrontend => Provider.of(context);
+
+  Widget _stockItemBuilder(BuildContext context, int index) {
+    final StockItem item = _mainFrontend.stocks[index];
+    final bool isFirst = index == 0;
+    final bool isLast = index == _mainFrontend.stocks.length - 1;
+    _mainFrontend.loadStockItemPrice(item.symbol);
+
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 8,
+        top: isFirst ? 8 : 0,
+        right: 8,
+        bottom: isLast ? MediaQuery.of(context).padding.bottom + 8 : 8,
+      ),
+      child: StockItemTile(item: item),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    Provider.of<MainFrontend>(context, listen: false).launch();
+    final MainFrontend mainFrontend = Provider.of(context, listen: false);
+    mainFrontend.launch().then((_) => mainFrontend.loadStocks());
   }
 
   @override
@@ -26,23 +46,19 @@ class _MainViewState extends State<MainView> {
         builder: (BuildContext context, MainFrontend state, Widget? child) => AnimatedSwitcher(
           duration: const Duration(milliseconds: 250),
           child: state.isLaunching
-              ? Center(
+              ? const Center(
                   child: Text('Loading...'),
                 )
               : CustomScrollView(
                   physics: const BouncingScrollPhysics(),
                   slivers: [
                     child!,
-                    for (int i = 0; i < 10; i++)
-                      SliverToBoxAdapter(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Container(
-                            color: Colors.red.withOpacity(0.15),
-                            height: Random().nextDouble() * (100 - 80) + 80,
-                          ),
-                        ),
-                      )
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        _stockItemBuilder,
+                        childCount: _mainFrontend.stocks.length,
+                      ),
+                    ),
                   ],
                 ),
         ),

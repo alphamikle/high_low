@@ -1,17 +1,23 @@
 import 'package:dio/dio.dart';
-import 'package:high_low/domain/main/dto/stock_item.dart';
-import 'package:high_low/service/config/config.dart';
+import 'package:high_low/domain/finhub/dto/item_prices.dart';
+import 'package:high_low/domain/finhub/dto/stock_item.dart';
+import 'package:retrofit/http.dart';
 
-class FinhubProvider {
-  FinhubProvider({
-    required Dio dio,
-  }) : _dio = dio;
+part 'finhub_provider.g.dart';
 
-  final Dio _dio;
+@RestApi(baseUrl: 'https://finnhub.io/api/v1/')
+abstract class FinhubProvider {
+  factory FinhubProvider(Dio dio, {String? baseUrl}) = _FinhubProvider;
 
-  Future<List<StockItem>> fetchListOfStocks() async {
-    final Response<dynamic> response = await _dio.get('https://finnhub.io/api/v1/stock/symbol?exchange=US&token=${Config.finhubToken}');
-    final List<StockItem> items = (response.data as List<dynamic>).map((me) => StockItem.fromJson(me)).toList();
-    return items;
-  }
+  @GET('stock/symbol')
+  Future<List<StockItem>> fetchListOfStocks({
+    @Query('token') required String token,
+    @Query('exchange') required String exchange,
+  });
+
+  @GET('/quote')
+  Future<ItemPrices> fetchStockItemPrices({
+    @Query('token') required String token,
+    @Query('symbol') required String symbol,
+  });
 }
