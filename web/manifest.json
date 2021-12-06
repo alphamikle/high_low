@@ -1,6 +1,6 @@
 {
-    "name": "isolator_stocks_app",
-    "short_name": "isolator_stocks_app",
+    "name": "high_low",
+    "short_name": "high_low",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
