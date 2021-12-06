@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'domain/main/logic/main_frontend.dart';
-import 'domain/main/ui/mock_list.dart';
 import 'high_low_app.dart';
 import 'service/di/registrations.dart';
 
@@ -31,11 +30,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return true
-        ? const MaterialApp(
-            title: 'High Low',
-            home: const MockList(),
-          )
-        : const HighLowApp();
+    return const HighLowApp();
   }
 }

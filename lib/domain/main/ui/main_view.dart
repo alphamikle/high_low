@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../../finhub/dto/stock_item.dart';
 import '../logic/main_frontend.dart';
 import 'main_header.dart';
-import 'mock_list.dart';
 import 'stock_item_tile.dart';
 
 class MainView extends StatefulWidget {
@@ -43,11 +42,6 @@ class _MainViewState extends State<MainView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      body: SafeArea(child: MockList()),
-    );
-
     return Scaffold(
       body: Consumer(
         builder: (BuildContext context, MainFrontend state, Widget? child) => AnimatedSwitcher(
