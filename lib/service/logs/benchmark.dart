@@ -1,4 +1,4 @@
-import 'package:high_low/service/logs/logs.dart';
+import 'logs.dart';
 
 const int LOG_PADDING = 70;
 

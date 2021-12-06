@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:high_low/service/logs/logs.dart';
-import 'package:high_low/service/types/types.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../../../service/logs/logs.dart';
+import '../../../service/types/types.dart';
 
 part 'item_prices.g.dart';
 

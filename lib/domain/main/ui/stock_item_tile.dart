@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:high_low/domain/finhub/dto/item_prices.dart';
-import 'package:high_low/domain/finhub/dto/stock_item.dart';
-import 'package:high_low/domain/main/logic/main_frontend.dart';
-import 'package:high_low/service/theme/app_theme.dart';
-import 'package:high_low/service/ui/loaders/circle_indicator.dart';
 import 'package:provider/provider.dart';
+
+import '../../../service/theme/app_theme.dart';
+import '../../../service/ui/loaders/circle_indicator.dart';
+import '../../finhub/dto/item_prices.dart';
+import '../../finhub/dto/stock_item.dart';
+import '../logic/main_frontend.dart';
 
 class StockItemTile extends StatelessWidget {
   const StockItemTile({

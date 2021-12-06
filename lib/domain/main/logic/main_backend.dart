@@ -2,16 +2,17 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
-import 'package:high_low/domain/finhub/dto/item_prices.dart';
-import 'package:high_low/domain/finhub/dto/stock_item.dart';
-import 'package:high_low/domain/finhub/logic/finhub_provider.dart';
-import 'package:high_low/domain/main/logic/main_frontend.dart';
-import 'package:high_low/domain/main/model/stock_item_price_data.dart';
-import 'package:high_low/service/config/config.dart';
-import 'package:high_low/service/logs/benchmark.dart';
-import 'package:high_low/service/queue/queue_operation.dart';
-import 'package:high_low/service/types/types.dart';
 import 'package:isolator/isolator.dart';
+
+import '../../../service/config/config.dart';
+import '../../../service/logs/benchmark.dart';
+import '../../../service/queue/queue_operation.dart';
+import '../../../service/types/types.dart';
+import '../../finhub/dto/item_prices.dart';
+import '../../finhub/dto/stock_item.dart';
+import '../../finhub/logic/finhub_provider.dart';
+import '../model/stock_item_price_data.dart';
+import 'main_frontend.dart';
 
 const int _queueSize = 5;
 

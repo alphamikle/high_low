@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
-import 'package:high_low/domain/finhub/dto/item_prices.dart';
-import 'package:high_low/domain/finhub/dto/stock_item.dart';
-import 'package:high_low/service/logs/logs.dart';
-import 'package:high_low/service/types/types.dart';
+import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../../../service/logs/logs.dart';
+import '../../../service/types/types.dart';
+import '../../finhub/dto/item_prices.dart';
+import '../../finhub/dto/stock_item.dart';
 
 part 'stock_item_price_data.g.dart';
 

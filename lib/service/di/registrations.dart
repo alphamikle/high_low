@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:high_low/domain/finhub/logic/finhub_provider.dart';
-import 'package:high_low/service/di/di.dart';
-import 'package:high_low/service/routing/default_router_information_parser.dart';
-import 'package:high_low/service/routing/page_builder.dart';
-import 'package:high_low/service/routing/root_router_delegate.dart';
+import 'package:flutter/widgets.dart';
+
+import '../../domain/finhub/logic/finhub_provider.dart';
+import '../routing/default_router_information_parser.dart';
+import '../routing/page_builder.dart';
+import '../routing/root_router_delegate.dart';
+import 'di.dart';
 
 void initDependencies() {
   Di.reg<BackButtonDispatcher>(() => RootBackButtonDispatcher());

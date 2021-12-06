@@ -1,4 +1,4 @@
-import 'package:high_low/service/routing/route_configuration.dart';
+import 'route_configuration.dart';
 
 typedef RouteParamName = String;
 typedef RouteParamValue = String;

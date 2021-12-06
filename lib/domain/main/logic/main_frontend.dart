@@ -1,14 +1,15 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
-import 'package:high_low/domain/finhub/dto/stock_item.dart';
-import 'package:high_low/domain/main/logic/main_backend.dart';
-import 'package:high_low/domain/main/model/stock_item_price_data.dart';
-import 'package:high_low/service/di/di.dart';
-import 'package:high_low/service/di/registrations.dart';
-import 'package:high_low/service/logs/logs.dart';
-import 'package:high_low/service/types/types.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:isolator/isolator.dart';
+
+import '../../../service/di/di.dart';
+import '../../../service/di/registrations.dart';
+import '../../../service/types/types.dart';
+import '../../finhub/dto/stock_item.dart';
+import '../model/stock_item_price_data.dart';
+import 'main_backend.dart';
 
 enum MainEvent {
   init,

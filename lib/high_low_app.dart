@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:high_low/service/di/di.dart';
+
+import 'service/di/di.dart';
 
 class HighLowApp extends StatelessWidget {
   const HighLowApp({Key? key}) : super(key: key);

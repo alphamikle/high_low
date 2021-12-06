@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:high_low/domain/finhub/dto/item_prices.dart';
-import 'package:high_low/domain/finhub/dto/stock_item.dart';
 import 'package:retrofit/http.dart';
+
+import '../dto/item_prices.dart';
+import '../dto/stock_item.dart';
 
 part 'finhub_provider.g.dart';
 

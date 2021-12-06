@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:high_low/domain/main/logic/main_frontend.dart';
-import 'package:high_low/service/theme/app_theme.dart';
-import 'package:high_low/service/ui/loaders/circle_indicator.dart';
 import 'package:provider/provider.dart';
+
+import '../../../service/theme/app_theme.dart';
+import '../../../service/ui/loaders/circle_indicator.dart';
+import '../logic/main_frontend.dart';
 
 const double _headerHeight = 130;
 

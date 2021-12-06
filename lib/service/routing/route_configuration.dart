@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
-import 'package:high_low/service/logs/logs.dart';
-import 'package:high_low/service/routing/routes.dart';
-import 'package:high_low/service/types/types.dart';
+import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import '../logs/logs.dart';
+import '../types/types.dart';
+import 'routes.dart';
 
 part 'route_configuration.g.dart';
 

@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 class Di {
   static final Map<String, dynamic> _dependencies = <String, dynamic>{};

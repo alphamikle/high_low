@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
-import 'package:high_low/service/routing/route_configuration.dart';
-import 'package:high_low/service/routing/routes.dart';
+import 'package:flutter/widgets.dart';
+
+import 'route_configuration.dart';
+import 'routes.dart';
 
 class DefaultRouterInformationParser extends RouteInformationParser<RouteConfiguration> {
   @override

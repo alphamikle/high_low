@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:high_low/domain/main/ui/main_view.dart';
-import 'package:high_low/service/di/di.dart';
-import 'package:high_low/service/logs/logs.dart';
-import 'package:high_low/service/routing/page_builder.dart';
-import 'package:high_low/service/routing/route_configuration.dart';
-import 'package:high_low/service/routing/routes.dart';
+
+import '../../domain/main/ui/main_view.dart';
+import '../di/di.dart';
+import '../logs/logs.dart';
+import 'page_builder.dart';
+import 'route_configuration.dart';
+import 'routes.dart';
 
 class RootRouterDelegate extends RouterDelegate<RouteConfiguration> with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteConfiguration> {
   RootRouterDelegate() : navigatorKey = GlobalKey();

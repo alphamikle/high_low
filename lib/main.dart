@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:high_low/domain/main/logic/main_frontend.dart';
-import 'package:high_low/high_low_app.dart';
-import 'package:high_low/service/di/registrations.dart';
 import 'package:provider/provider.dart';
+
+import 'domain/main/logic/main_frontend.dart';
+import 'domain/main/ui/mock_list.dart';
+import 'high_low_app.dart';
+import 'service/di/registrations.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +31,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const HighLowApp();
+    return true
+        ? const MaterialApp(
+            title: 'High Low',
+            home: const MockList(),
+          )
+        : const HighLowApp();
   }
 }
