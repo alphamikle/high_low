@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:isolator/isolator.dart';
+import 'package:isolator/next/maybe.dart';
 
 import '../../../service/di/di.dart';
 import '../../../service/di/registrations.dart';
@@ -23,22 +24,33 @@ enum MainEvent {
   priceOperationEndLoading,
 }
 
-class MainFrontend with Frontend<MainEvent>, ChangeNotifier {
+class MainFrontend with Frontend, ChangeNotifier {
   bool isLaunching = true;
   bool isStocksLoading = false;
   final List<StockItem> stocks = [];
   final Map<StockSymbol, StockItemPriceData> prices = {};
+  final Set<StockSymbol> _pricesLoadingBlocker = {};
   final Set<StockSymbol> pricesOperationsWaitingQueue = {};
   final Set<StockSymbol> pricesOperationsLoadingQueue = {};
+
+  int counter = 0;
   TextEditingController searchController = TextEditingController();
 
   bool _isInLaunchProcess = false;
   bool _isLaunched = false;
   Timer? _pricesNotifierTimer;
 
-  void loadStocks() => send(MainEvent.loadStocks);
+  void loadStocks() => run(event: MainEvent.loadStocks);
 
-  void loadStockItemPrice(StockSymbol symbol) => send(MainEvent.loadStockItemPrices, symbol);
+  Future<void> loadStockItemPrice(StockSymbol symbol) async {
+    if (_pricesLoadingBlocker.contains(symbol)) {
+      return;
+    }
+    _pricesLoadingBlocker.add(symbol);
+    final Maybe<Object?> response = await run(event: MainEvent.loadStockItemPrices, data: symbol);
+    counter++;
+    print('[$counter] [loadStockItemPrice] $symbol : $response');
+  }
 
   Future<void> launch() async {
     if (!isLaunching || _isLaunched || _isInLaunchProcess) {
@@ -46,35 +58,36 @@ class MainFrontend with Frontend<MainEvent>, ChangeNotifier {
     }
     _isInLaunchProcess = true;
     searchController.addListener(_filterStocks);
-    await initBackend(_launch, backendType: MainBackend);
+    await initBackend(initializer: _launch);
     _isInLaunchProcess = false;
     _isLaunched = true;
     _update(() => isLaunching = false);
   }
 
-  void _filterStocks() => send(MainEvent.filterStocks, searchController.text);
+  void _filterStocks() => run(event: MainEvent.filterStocks, data: searchController.text);
 
-  void _setLoadedStocks(List<StockItem> stocks) {
+  void _setLoadedStocks({required MainEvent event, required List<StockItem> data}) {
     _update(() {
-      this.stocks.clear();
-      this.stocks.addAll(stocks);
+      stocks.clear();
+      stocks.addAll(data);
     });
   }
 
-  void _startLoadingStocks() {
+  void _startLoadingStocks({required MainEvent event, void data}) {
     _update(() {
       isStocksLoading = true;
     });
   }
 
-  void _endLoadingStocks() {
+  void _endLoadingStocks({required MainEvent event, void data}) {
     _update(() {
       isStocksLoading = false;
     });
   }
 
-  void _setStockItemPrices(StockItemPriceData priceData) {
-    prices[priceData.stockItem.symbol] = priceData;
+  void _setStockItemPrices({required MainEvent event, required StockItemPriceData data}) {
+    print('GET: _setStockItemPrices: ${data.stockItem.symbol}');
+    prices[data.stockItem.symbol] = data;
     _pricesNotifierTimer?.cancel();
     _pricesNotifierTimer = Timer(const Duration(milliseconds: 250), () {
       _pricesNotifierTimer = null;
@@ -87,35 +100,36 @@ class MainFrontend with Frontend<MainEvent>, ChangeNotifier {
     notifyListeners();
   }
 
-  void _addSymbolOfOperationToWaitingQueue(StockSymbol symbol) {
-    _update(() => pricesOperationsWaitingQueue.add(symbol));
+  void _addSymbolOfOperationToWaitingQueue({required MainEvent event, required StockSymbol data}) {
+    _update(() => pricesOperationsWaitingQueue.add(data));
   }
 
-  void _addSymbolOfOperationToLoadingQueue(StockSymbol symbol) {
-    _update(() => pricesOperationsLoadingQueue.add(symbol));
+  void _addSymbolOfOperationToLoadingQueue({required MainEvent event, required StockSymbol data}) {
+    _update(() => pricesOperationsLoadingQueue.add(data));
   }
 
-  void _makeSymbolOperationLoaded(StockSymbol symbol) {
+  void _makeSymbolOperationLoaded({required MainEvent event, required StockSymbol data}) {
     _update(() {
-      pricesOperationsWaitingQueue.remove(symbol);
-      pricesOperationsLoadingQueue.remove(symbol);
+      pricesOperationsWaitingQueue.remove(data);
+      pricesOperationsLoadingQueue.remove(data);
+      _pricesLoadingBlocker.remove(data);
     });
   }
 
-  static Future<void> _launch(BackendArgument<void> argument) async {
+  static MainBackend _launch(BackendArgument<void> argument) {
     initDependencies();
-    MainBackend(argument: argument, finHubProvider: Di.get());
+    return MainBackend(argument: argument, finHubProvider: Di.get());
   }
 
   @override
-  Map<MainEvent, Function> get tasks => {
-        MainEvent.loadStocks: _setLoadedStocks,
-        MainEvent.startLoadingStocks: _startLoadingStocks,
-        MainEvent.endLoadingStocks: _endLoadingStocks,
-        MainEvent.loadStockItemPrices: _setStockItemPrices,
-        MainEvent.filterStocks: _setLoadedStocks,
-        MainEvent.priceOperationAddedToQueue: _addSymbolOfOperationToWaitingQueue,
-        MainEvent.priceOperationStartLoading: _addSymbolOfOperationToLoadingQueue,
-        MainEvent.priceOperationEndLoading: _makeSymbolOperationLoaded,
-      };
+  void initActions() {
+    whenEventCome(MainEvent.loadStocks).run(_setLoadedStocks);
+    whenEventCome(MainEvent.startLoadingStocks).run(_startLoadingStocks);
+    whenEventCome(MainEvent.endLoadingStocks).run(_endLoadingStocks);
+    whenEventCome(MainEvent.loadStockItemPrices).run(_setStockItemPrices);
+    whenEventCome(MainEvent.filterStocks).run(_setLoadedStocks);
+    whenEventCome(MainEvent.priceOperationAddedToQueue).run(_addSymbolOfOperationToWaitingQueue);
+    whenEventCome(MainEvent.priceOperationStartLoading).run(_addSymbolOfOperationToLoadingQueue);
+    whenEventCome(MainEvent.priceOperationEndLoading).run(_makeSymbolOperationLoaded);
+  }
 }

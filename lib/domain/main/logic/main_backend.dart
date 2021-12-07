@@ -3,6 +3,7 @@ import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
 import 'package:isolator/isolator.dart';
+import 'package:isolator/next/utils.dart';
 
 import '../../../service/config/config.dart';
 import '../../../service/logs/benchmark.dart';
@@ -18,12 +19,12 @@ const int _queueSize = 5;
 
 typedef StockItemFilter = bool Function(StockItem);
 
-class MainBackend extends Backend<MainEvent> {
+class MainBackend extends Backend {
   MainBackend({
     required BackendArgument<void> argument,
     required FinhubProvider finHubProvider,
   })  : _finHubProvider = finHubProvider,
-        super(argument);
+        super(argument: argument);
 
   final FinhubProvider _finHubProvider;
   final List<StockItem> _stocks = [];
@@ -34,43 +35,66 @@ class MainBackend extends Backend<MainEvent> {
   Timer? _searchTimer;
   String _prevSearchSubString = '';
 
-  Future<void> _loadStocks() async {
-    send(MainEvent.startLoadingStocks);
+  Future<ActionResponse<void>> _loadStocks({required MainEvent event, void data}) async {
+    await send(event: MainEvent.startLoadingStocks);
     final List<StockItem> stocks = await _finHubProvider.fetchListOfStocks(
       token: Config.finhubToken,
       exchange: 'US',
     );
+    print(1);
     stocks.sort(_stocksSortingPredicate);
     _stocks.clear();
     _stocks.addAll(stocks);
-    await sendChunks(MainEvent.loadStocks, _stocks);
-    send(MainEvent.endLoadingStocks);
+    bench.start('Send ${_stocks.length} items by chunks');
+    await send(
+      event: MainEvent.loadStocks,
+      data: ActionResponse.chunks(
+        Chunks(
+          data: _stocks,
+          updateAfterFirstChunk: true,
+          size: 400,
+          delay: const Duration(milliseconds: 1),
+        ),
+      ),
+    );
+    bench.end('Send ${_stocks.length} items by chunks');
+    await send(event: MainEvent.endLoadingStocks);
+    return ActionResponse.empty();
   }
 
-  Future<void> _loadStockItemPrice(StockSymbol symbol) async {
-    if (_needToLoadStockPrices(symbol)) {
-      _loadingPrices.add(symbol);
-      send(MainEvent.priceOperationAddedToQueue, symbol);
+  Future<ActionResponse<void>> _loadStockItemPrice({required MainEvent event, required StockSymbol data}) async {
+    if (_needToLoadStockPrices(data)) {
+      _loadingPrices.add(data);
+      await send(event: MainEvent.priceOperationAddedToQueue, data: ActionResponse.value(data));
       _pricesOperations.addLast(() async {
-        send(MainEvent.priceOperationStartLoading, symbol);
-        bench.start('Loading prices for symbol = $symbol');
-        final ItemPrices itemPrices = await _finHubProvider.fetchStockItemPrices(
-          token: Config.finhubToken,
-          symbol: symbol,
-        );
-        bench.end('Loading prices for symbol = $symbol');
-        final StockItemPriceData priceData = StockItemPriceData(
-          createdAt: DateTime.now(),
-          stockItem: _stocks.firstWhere((StockItem me) => me.symbol == symbol),
-          prices: itemPrices,
-        );
-        _prices[symbol] = priceData;
-        send(MainEvent.priceOperationEndLoading, symbol);
-        send(MainEvent.loadStockItemPrices, priceData);
-        _loadingPrices.remove(symbol);
+        await send(event: MainEvent.priceOperationStartLoading, data: ActionResponse.value(data));
+        bench.start('Loading prices for symbol = $data');
+        try {
+          final ItemPrices itemPrices = await _finHubProvider.fetchStockItemPrices(
+            token: Config.finhubToken,
+            symbol: data,
+          );
+          bench.end('Loading prices for symbol = $data');
+          final StockItemPriceData priceData = StockItemPriceData(
+            createdAt: DateTime.now(),
+            stockItem: _stocks.firstWhere((StockItem me) => me.symbol == data),
+            prices: itemPrices,
+          );
+          _prices[data] = priceData;
+          await send(event: MainEvent.priceOperationEndLoading, data: ActionResponse.value(data));
+          await send(event: MainEvent.loadStockItemPrices, data: ActionResponse.value(priceData));
+          _loadingPrices.remove(data);
+        } catch (error) {
+          print('Error on loading item prices: $error');
+          await wait(5000);
+        } finally {
+          await send(event: MainEvent.priceOperationEndLoading, data: ActionResponse.value(data));
+          _loadingPrices.remove(data);
+        }
       });
       unawaited(_pricesOperationsHandler());
     }
+    return ActionResponse.empty();
   }
 
   bool _needToLoadStockPrices(StockSymbol symbol) {
@@ -92,19 +116,21 @@ class MainBackend extends Backend<MainEvent> {
     }
   }
 
-  void _filterStocks(String searchSubString) {
+  ActionResponse<void> _filterStocks({required MainEvent event, required String data}) {
+    final String searchSubString = data;
     if (_prevSearchSubString == searchSubString) {
-      return;
+      return ActionResponse.empty();
     }
     _prevSearchSubString = searchSubString;
-    send(MainEvent.startLoadingStocks);
+    send(event: MainEvent.startLoadingStocks);
     _searchTimer?.cancel();
     _searchTimer = Timer(const Duration(milliseconds: 500), () async {
       _searchTimer = null;
       final List<StockItem> filteredStocks = _stocks.where(_stockFilterPredicate(searchSubString)).toList();
-      await sendChunks(MainEvent.filterStocks, filteredStocks);
-      send(MainEvent.endLoadingStocks);
+      await send(event: MainEvent.filterStocks, data: ActionResponse.chunks(Chunks(data: filteredStocks, updateAfterFirstChunk: true)));
+      await send(event: MainEvent.endLoadingStocks);
     });
+    return ActionResponse.empty();
   }
 
   int _stocksSortingPredicate(StockItem first, StockItem second) => first.symbol.compareTo(second.symbol);
@@ -126,9 +152,9 @@ class MainBackend extends Backend<MainEvent> {
   }
 
   @override
-  Map<MainEvent, Function> get operations => {
-        MainEvent.loadStocks: _loadStocks,
-        MainEvent.loadStockItemPrices: _loadStockItemPrice,
-        MainEvent.filterStocks: _filterStocks,
-      };
+  void initActions() {
+    whenEventCome(MainEvent.loadStocks).run(_loadStocks);
+    whenEventCome(MainEvent.loadStockItemPrices).run(_loadStockItemPrice);
+    whenEventCome(MainEvent.filterStocks).run(_filterStocks);
+  }
 }
