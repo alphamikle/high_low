@@ -1,3 +1,3 @@
 abstract class Config {
-  static const String finhubToken = String.fromEnvironment('FIN_HUB_TOKEN', defaultValue: '');
+  static const String apiToken = String.fromEnvironment('API_TOKEN', defaultValue: '');
 }

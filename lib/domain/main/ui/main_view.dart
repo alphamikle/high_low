@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../finhub/dto/stock_item.dart';
+import '../../crypto/dto/stock_item.dart';
 import '../logic/main_frontend.dart';
 import 'main_header.dart';
 import 'stock_item_tile.dart';
@@ -20,7 +20,6 @@ class _MainViewState extends State<MainView> {
     final StockItem item = _mainFrontend.stocks[index];
     final bool isFirst = index == 0;
     final bool isLast = index == _mainFrontend.stocks.length - 1;
-    _mainFrontend.loadStockItemPrice(item.symbol);
 
     return Padding(
       padding: EdgeInsets.only(
