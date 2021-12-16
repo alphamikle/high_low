@@ -17,7 +17,7 @@ class StockItemTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextStyle priceStyle = TextStyle(
       fontWeight: FontWeight.w600,
-      color: item.usdPrices.diff1h >= 0 ? AppTheme.of(context).priceUpColor : AppTheme.of(context).priceDownColor,
+      color: item.usdPrices.diff24h >= 0 ? AppTheme.of(context).priceUpColor : AppTheme.of(context).priceDownColor,
       fontSize: 14,
     );
     final double price = item.usdPrices.price;
@@ -88,7 +88,7 @@ class StockItemTile extends StatelessWidget {
         Expanded(
           flex: 3,
           child: Text(
-            '${Utils.formatAsCurrency(item.usdPrices.diff1h, symbol: '')}%',
+            '${Utils.formatAsCurrency(item.usdPrices.diff24h, symbol: '')}%',
             style: priceStyle,
             textAlign: TextAlign.end,
           ),

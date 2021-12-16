@@ -11,6 +11,7 @@ class ItemPrices {
   const ItemPrices({
     required this.price,
     required this.diff1h,
+    required this.diff24h,
   });
 
   factory ItemPrices.fromJson(Json json) => _$ItemPricesFromJson(json);
@@ -19,6 +20,9 @@ class ItemPrices {
 
   @JsonKey(name: 'percent_change_1h')
   final double diff1h;
+
+  @JsonKey(name: 'percent_change_24h')
+  final double diff24h;
 
   Json toJson() => _$ItemPricesToJson(this);
 }
