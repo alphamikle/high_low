@@ -21,7 +21,8 @@ class StockItemTile extends StatelessWidget {
       fontSize: 14,
     );
     final double price = item.usdPrices.price;
-    final int digits = price > 0.01 ? 2 : 6;
+    final int zeros = Utils.countZeroAfterComma(price);
+    final String prettyPrice = zeros == 0 ? Utils.formatAsCurrency(price) : '\$${price.toStringAsExponential(2)}';
 
     return Row(
       children: [
@@ -77,7 +78,7 @@ class StockItemTile extends StatelessWidget {
         Expanded(
           flex: 3,
           child: Text(
-            Utils.formatAsCurrency(price, digits: digits),
+            prettyPrice,
             style: priceStyle.copyWith(
               color: AppTheme.of(context).subtitleColor,
             ),
@@ -87,7 +88,7 @@ class StockItemTile extends StatelessWidget {
         Expanded(
           flex: 3,
           child: Text(
-            Utils.formatAsCurrency(item.usdPrices.diff1h),
+            '${Utils.formatAsCurrency(item.usdPrices.diff1h, symbol: '')}%',
             style: priceStyle,
             textAlign: TextAlign.end,
           ),
