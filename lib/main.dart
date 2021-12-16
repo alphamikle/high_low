@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:high_low/service/theme/app_theme.dart';
 import 'package:provider/provider.dart';
 
 import 'domain/main/logic/main_frontend.dart';
@@ -19,6 +20,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: MainFrontend()),
+        Provider(create: (BuildContext context) => AppTheme(context)),
       ],
       child: const MyApp(),
     ),

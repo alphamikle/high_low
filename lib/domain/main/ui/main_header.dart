@@ -68,7 +68,7 @@ class _MainHeaderDelegate extends SliverPersistentHeaderDelegate {
                 hintText: 'Search',
               ),
               style: TextStyle(
-                color: AppTheme.of(context).textColor,
+                color: AppTheme.of(context).titleColor,
                 fontWeight: FontWeight.w500,
               ),
               controller: mainFrontend.searchController,
@@ -79,7 +79,7 @@ class _MainHeaderDelegate extends SliverPersistentHeaderDelegate {
                 padding: const EdgeInsets.only(right: 8),
                 child: Consumer(
                   builder: (BuildContext context, MainFrontend state, Widget? child) => CircleIndicator(
-                    color: AppTheme.of(context).textColor,
+                    color: AppTheme.of(context).titleColor,
                     visible: state.isStocksLoading,
                   ),
                 ),

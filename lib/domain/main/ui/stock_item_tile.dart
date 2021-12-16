@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../service/theme/app_theme.dart';
@@ -16,19 +17,22 @@ class StockItemTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextStyle priceStyle = TextStyle(
       fontWeight: FontWeight.w600,
-      color: AppTheme.of(context).textColor.withOpacity(0.5),
-      fontSize: 12,
+      color: item.usdPrices.diff1h >= 0 ? AppTheme.of(context).priceUpColor : AppTheme.of(context).priceDownColor,
+      fontSize: 14,
     );
+    final double price = item.usdPrices.price;
+    final int digits = price > 0.01 ? 2 : 6;
 
     return Row(
       children: [
-        ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
+        Padding(
+          padding: const EdgeInsets.only(right: 8),
           child: Container(
-            height: 80,
-            width: 80,
+            height: 70,
+            width: 70,
             decoration: BoxDecoration(
               color: AppTheme.of(context).headerColor,
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
             ),
             child: Padding(
               padding: const EdgeInsets.all(12),
@@ -40,28 +44,52 @@ class StockItemTile extends StatelessWidget {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 8),
-          child: Text(
-            item.name,
-            style: TextStyle(
-              color: AppTheme.of(context).textColor,
-              fontWeight: FontWeight.w500,
-              fontSize: 16,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+        Expanded(
+          flex: 6,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Text(
+                  item.symbol.toUpperCase(),
+                  style: TextStyle(
+                    color: AppTheme.of(context).titleColor,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+              Text(
+                item.name,
+                style: TextStyle(
+                  color: AppTheme.of(context).subtitleColor,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ),
         ),
-        const Spacer(),
-        Padding(
-          padding: const EdgeInsets.only(right: 8),
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 250),
-            child: Text(
-              Utils.formatAsCurrency(item.usdPrices.price),
-              style: priceStyle,
+        Expanded(
+          flex: 3,
+          child: Text(
+            Utils.formatAsCurrency(price, digits: digits),
+            style: priceStyle.copyWith(
+              color: AppTheme.of(context).subtitleColor,
             ),
+            textAlign: TextAlign.end,
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: Text(
+            Utils.formatAsCurrency(item.usdPrices.diff1h),
+            style: priceStyle,
+            textAlign: TextAlign.end,
           ),
         ),
       ],

@@ -21,6 +21,7 @@ dependencies:
   dio: ^4.0.4
   provider: ^6.0.1
   retrofit: ^3.0.0
+  anitex: ^2.0.0
 
 dependency_overrides:
   isolator:

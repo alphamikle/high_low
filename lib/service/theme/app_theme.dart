@@ -1,9 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class AppTheme {
-  AppTheme.of(BuildContext context) : _context = context;
-
   final BuildContext _context;
+
+  AppTheme(this._context);
+
+  static AppTheme of(BuildContext context) {
+    return Provider.of(context);
+  }
 
   Color get headerColor {
     return const Color.fromRGBO(244, 244, 244, 1);
@@ -13,11 +19,19 @@ class AppTheme {
     return const Color.fromRGBO(255, 230, 209, 1);
   }
 
-  Color get textColor {
+  Color get titleColor {
     return const Color.fromRGBO(43, 48, 51, 1);
   }
 
-  Color get textColorSecondary {
-    return const Color.fromRGBO(174, 176, 177, 1);
+  Color get subtitleColor {
+    return const Color.fromRGBO(172, 174, 175, 1);
+  }
+
+  Color get priceUpColor {
+    return const Color.fromRGBO(24, 181, 139, 1);
+  }
+
+  Color get priceDownColor {
+    return const Color.fromRGBO(255, 70, 110, 1);
   }
 }

@@ -12,6 +12,7 @@ class HighLowApp extends StatelessWidget {
       routeInformationParser: Di.get<RouteInformationParser<Object>>(),
       routerDelegate: Di.get<RouterDelegate<Object>>(),
       backButtonDispatcher: Di.get<BackButtonDispatcher>(),
+      theme: ThemeData.light(),
     );
   }
 }
