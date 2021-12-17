@@ -14,18 +14,18 @@ enum MainEvent {
   startLoadingStocks,
   endLoadingStocks,
   filterStocks,
+  updateFilteredStocks,
 }
 
 class MainFrontend with Frontend, ChangeNotifier {
   bool isLaunching = true;
   bool isStocksLoading = false;
   final List<StockItem> stocks = [];
-
-  int counter = 0;
   TextEditingController searchController = TextEditingController();
 
   bool _isInLaunchProcess = false;
   bool _isLaunched = false;
+  String _prevSearch = '';
 
   void loadStocks() => run(event: MainEvent.loadStocks);
 
@@ -41,7 +41,12 @@ class MainFrontend with Frontend, ChangeNotifier {
     _update(() => isLaunching = false);
   }
 
-  void _filterStocks() => run(event: MainEvent.filterStocks, data: searchController.text);
+  void _filterStocks() {
+    if (_prevSearch != searchController.text) {
+      _prevSearch = searchController.text;
+      run(event: MainEvent.filterStocks, data: searchController.text);
+    }
+  }
 
   void _setLoadedStocks({required MainEvent event, required List<StockItem> data}) {
     _update(() {
@@ -77,6 +82,6 @@ class MainFrontend with Frontend, ChangeNotifier {
     whenEventCome(MainEvent.loadStocks).run(_setLoadedStocks);
     whenEventCome(MainEvent.startLoadingStocks).run(_startLoadingStocks);
     whenEventCome(MainEvent.endLoadingStocks).run(_endLoadingStocks);
-    whenEventCome(MainEvent.filterStocks).run(_setLoadedStocks);
+    whenEventCome(MainEvent.updateFilteredStocks).run(_setLoadedStocks);
   }
 }

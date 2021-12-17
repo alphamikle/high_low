@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:yalo_locale/lib.dart';
 
 import '../../../service/theme/app_theme.dart';
 import '../../../service/tools/utils.dart';
@@ -22,7 +23,7 @@ class StockItemTile extends StatelessWidget {
     );
     final double price = item.usdPrices.price;
     final int zeros = Utils.countZeroAfterComma(price);
-    final String prettyPrice = zeros == 0 ? Utils.formatAsCurrency(price) : '\$${price.toStringAsExponential(2)}';
+    final String prettyPrice = (zeros == 0 ? Utils.formatAsCurrency(price, symbol: '') : price.toStringAsExponential(2)).trim();
 
     return Row(
       children: [
@@ -78,7 +79,7 @@ class StockItemTile extends StatelessWidget {
         Expanded(
           flex: 3,
           child: Text(
-            prettyPrice,
+            '$prettyPrice ${Messages.of(context).common.currency}',
             style: priceStyle.copyWith(
               color: AppTheme.of(context).subtitleColor,
             ),

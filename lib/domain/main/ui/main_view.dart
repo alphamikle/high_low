@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:high_low/service/theme/app_theme.dart';
+import 'package:isolator/next/frontend/frontend_event_subscription.dart';
 import 'package:provider/provider.dart';
+import 'package:yalo_locale/lib.dart';
 
 import '../../crypto/dto/stock_item.dart';
 import '../logic/main_frontend.dart';
@@ -15,6 +18,7 @@ class MainView extends StatefulWidget {
 
 class _MainViewState extends State<MainView> {
   MainFrontend get _mainFrontend => Provider.of(context);
+  late final FrontendEventSubscription<MainEvent> _eventSubscription;
 
   Widget _stockItemBuilder(BuildContext context, int index) {
     final StockItem item = _mainFrontend.stocks[index];
@@ -32,11 +36,36 @@ class _MainViewState extends State<MainView> {
     );
   }
 
+  void _onLoadingDone(MainEvent event) {
+    final AppTheme appTheme = AppTheme.of(context, listen: false);
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: appTheme.titleColor,
+        content: Text(
+          Messages.of(context).main.search.result(Provider.of<MainFrontend>(context, listen: false).stocks.length),
+          style: TextStyle(color: appTheme.headerColor),
+        ),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     final MainFrontend mainFrontend = Provider.of(context, listen: false);
     mainFrontend.launch().then((_) => mainFrontend.loadStocks());
+    _eventSubscription = mainFrontend.subscribeOnEvent(
+      listener: _onLoadingDone,
+      event: MainEvent.updateFilteredStocks,
+      onEveryEvent: true,
+    );
+  }
+
+  @override
+  void dispose() {
+    _eventSubscription.close();
+    super.dispose();
   }
 
   @override
@@ -46,13 +75,13 @@ class _MainViewState extends State<MainView> {
         builder: (BuildContext context, MainFrontend state, Widget? child) => AnimatedSwitcher(
           duration: const Duration(milliseconds: 250),
           child: state.isLaunching
-              ? const Center(
-                  child: Text('Loading...'),
+              ? Center(
+                  child: Text(Messages.of(context).main.loading),
                 )
               : CustomScrollView(
                   physics: const BouncingScrollPhysics(),
                   slivers: [
-                    child!,
+                    const MainHeader(),
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
                         _stockItemBuilder,
@@ -62,7 +91,6 @@ class _MainViewState extends State<MainView> {
                   ],
                 ),
         ),
-        child: const MainHeader(),
       ),
     );
   }

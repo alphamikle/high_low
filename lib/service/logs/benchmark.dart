@@ -1,7 +1,5 @@
 import 'logs.dart';
 
-const int LOG_PADDING = 70;
-
 class _Benchmark {
   final Map<String, int> _starts = <String, int>{};
 
@@ -20,7 +18,13 @@ class _Benchmark {
       throw Exception('In Benchmark not placed comparing with id=$benchId');
     }
     final double diff = (DateTime.now().microsecondsSinceEpoch - _starts[benchId]!) / 1000;
-    Logs.trace('$benchId need ${diff}ms');
+    final String info = '$benchId need ${diff}ms';
+    const bool profile = true;
+    if (profile) {
+      print(info);
+    } else {
+      Logs.info(info);
+    }
     _starts.remove(benchId);
     return diff;
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yalo_locale/lib.dart';
 
 import 'service/di/di.dart';
 
@@ -8,11 +9,14 @@ class HighLowApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'High Low',
       routeInformationParser: Di.get<RouteInformationParser<Object>>(),
       routerDelegate: Di.get<RouterDelegate<Object>>(),
       backButtonDispatcher: Di.get<BackButtonDispatcher>(),
-      theme: ThemeData.light(),
+      theme: Theme.of(context).copyWith(brightness: Brightness.dark),
+      debugShowCheckedModeBanner: false,
+      localizationsDelegates: localizationsDelegates,
+      supportedLocales: supportedLocales,
+      onGenerateTitle: (BuildContext context) => Messages.of(context).common.appTitle,
     );
   }
 }

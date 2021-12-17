@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yalo_locale/lib.dart';
 
 import '../../../service/theme/app_theme.dart';
 import '../../../service/ui/loaders/circle_indicator.dart';
@@ -65,7 +66,7 @@ class _MainHeaderDelegate extends SliverPersistentHeaderDelegate {
                 focusedBorder: border,
                 focusedErrorBorder: border,
                 isDense: true,
-                hintText: 'Search',
+                hintText: Messages.of(context).main.search.hint,
               ),
               style: TextStyle(
                 color: AppTheme.of(context).titleColor,

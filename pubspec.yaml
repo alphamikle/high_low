@@ -22,10 +22,14 @@ dependencies:
   provider: ^6.0.1
   retrofit: ^3.0.0
   anitex: ^2.0.0
+  yalo_locale:
+    path: ./.yalo_locale
 
 dependency_overrides:
   isolator:
     path: ../
+  yalo:
+    path: ../../yalo
 
 dev_dependencies:
   flutter_test:
@@ -34,6 +38,9 @@ dev_dependencies:
   pedantic: ^1.11.1
   json_serializable: ^6.1.1
   retrofit_generator: ^3.0.0+2
+  yalo: ^2.0.2
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/

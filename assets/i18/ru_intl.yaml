@@ -1,0 +1,14 @@
+main:
+  loading: Загрузка...
+  search:
+    hint: Поиск
+    result:
+      zero: Мы ничего не нашли
+      one: Мы нашли ${howMany} элемент
+      two: Мы нашли ${howMany} элемента
+      other: Мы нашли ${howMany} элементов
+
+common:
+  currency: '\$'
+  percent: '%'
+  appTitle: High Low

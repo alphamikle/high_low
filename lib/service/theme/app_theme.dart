@@ -7,8 +7,8 @@ class AppTheme {
 
   AppTheme(this._context);
 
-  static AppTheme of(BuildContext context) {
-    return Provider.of(context);
+  static AppTheme of(BuildContext context, {bool listen = true}) {
+    return Provider.of(context, listen: listen);
   }
 
   Color get headerColor {
