@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:high_low/domain/crypto/logic/crypto_provider.dart';
+import 'package:high_low/domain/crypto/logic/crypto_provider_web.dart';
 import 'package:high_low/domain/main/logic/main_frontend.dart';
 
-import '../../domain/crypto/logic/crypto_provider.dart';
+import '../../domain/crypto/logic/crypto_provider_native.dart';
 import '../routing/default_router_information_parser.dart';
 import '../routing/page_builder.dart';
 import '../routing/root_router_delegate.dart';
@@ -31,6 +34,6 @@ void initDependencies() {
             ),
           ),
       asBuilder: true);
-  Di.reg(() => CryptoProvider(Di.get()), asBuilder: true);
+  Di.reg<CryptoProvider>(() => kIsWeb ? CryptoProviderWeb(Di.get()) : CryptoProviderNative(Di.get()), asBuilder: true);
   Di.reg(() => MainFrontend());
 }

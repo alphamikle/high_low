@@ -76,7 +76,7 @@ class MainFrontend with Frontend, ChangeNotifier {
 
   static MainBackend _launch(BackendArgument<void> argument) {
     initDependencies();
-    return MainBackend(argument: argument, CryptoProvider: Di.get());
+    return MainBackend(argument: argument, cryptoProvider: Di.get());
   }
 
   @override

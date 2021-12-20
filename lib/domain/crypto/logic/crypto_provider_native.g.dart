@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'crypto_provider.dart';
+part of 'crypto_provider_native.dart';
 
 // **************************************************************************
 // RetrofitGenerator
 // **************************************************************************
 
-class _CryptoProvider implements CryptoProvider {
-  _CryptoProvider(this._dio, {this.baseUrl}) {
+class _CryptoProviderNative implements CryptoProviderNative {
+  _CryptoProviderNative(this._dio, {this.baseUrl}) {
     baseUrl ??= 'https://pro-api.coinmarketcap.com/v1/';
   }
 

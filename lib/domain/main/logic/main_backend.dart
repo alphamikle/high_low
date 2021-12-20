@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:high_low/domain/crypto/dto/stock_response.dart';
 import 'package:isolator/isolator.dart';
 
 import '../../../service/config/config.dart';
 import '../../crypto/dto/stock_item.dart';
+import '../../crypto/dto/stock_response.dart';
 import '../../crypto/logic/crypto_provider.dart';
 import 'main_frontend.dart';
 
@@ -13,8 +13,8 @@ typedef StockItemFilter = bool Function(StockItem);
 class MainBackend extends Backend {
   MainBackend({
     required BackendArgument<void> argument,
-    required CryptoProvider CryptoProvider,
-  })  : _cryptoProvider = CryptoProvider,
+    required CryptoProvider cryptoProvider,
+  })  : _cryptoProvider = cryptoProvider,
         super(argument: argument);
 
   final CryptoProvider _cryptoProvider;
