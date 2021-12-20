@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:high_low/service/di/di.dart';
 import 'package:high_low/service/theme/app_theme.dart';
 import 'package:provider/provider.dart';
 
@@ -18,21 +23,15 @@ void main() {
   );
   initDependencies();
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(value: MainFrontend()),
-        Provider(create: (BuildContext context) => AppTheme(context)),
-      ],
-      child: const MyApp(),
+    DevicePreview(
+      enabled: kIsWeb || Platform.isWindows,
+      builder: (BuildContext context) => MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: Di.get<MainFrontend>()),
+          Provider(create: (BuildContext context) => AppTheme(context)),
+        ],
+        child: const HighLowApp(),
+      ),
     ),
   );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const HighLowApp();
-  }
 }

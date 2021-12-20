@@ -24,6 +24,7 @@ dependencies:
   anitex: ^2.0.0
   yalo_locale:
     path: ./.yalo_locale
+  device_preview: ^1.0.0
 
 dependency_overrides:
   isolator:

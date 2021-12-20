@@ -23,7 +23,14 @@ class MainBackend extends Backend {
 
   Future<ActionResponse<void>> _loadStocks({required MainEvent event, void data}) async {
     await send(event: MainEvent.startLoadingStocks, sendDirectly: true);
-    final StockResponse response = await _cryptoProvider.fetchLatestData(token: Config.apiToken);
+    late final StockResponse response;
+    try {
+      response = await _cryptoProvider.fetchLatestData(token: Config.apiToken);
+    } catch (error) {
+      // Handle error
+      print(error);
+      rethrow;
+    }
     final List<StockItem> stocks = response.data;
     _stocks.clear();
     _stocks.addAll(stocks);

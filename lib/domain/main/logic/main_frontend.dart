@@ -17,6 +17,8 @@ enum MainEvent {
   updateFilteredStocks,
 }
 
+int launchCount = 0;
+
 class MainFrontend with Frontend, ChangeNotifier {
   bool isLaunching = true;
   bool isStocksLoading = false;
@@ -27,7 +29,7 @@ class MainFrontend with Frontend, ChangeNotifier {
   bool _isLaunched = false;
   String _prevSearch = '';
 
-  void loadStocks() => run(event: MainEvent.loadStocks);
+  Future<void> loadStocks() => run(event: MainEvent.loadStocks);
 
   Future<void> launch() async {
     if (!isLaunching || _isLaunched || _isInLaunchProcess) {

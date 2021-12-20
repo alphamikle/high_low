@@ -22,17 +22,20 @@ class _CryptoProvider implements CryptoProvider {
     final _headers = <String, dynamic>{r'X-CMC_PRO_API_KEY': token};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    final _result = await _dio.fetch<Map<String, dynamic>>(_setStreamType<StockResponse>(Options(method: 'GET', headers: _headers, extra: _extra)
-        .compose(_dio.options, 'cryptocurrency/listings/latest', queryParameters: queryParameters, data: _data)
-        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    bench.start('STOCK RESPONSE DESERIALIZING');
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<StockResponse>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, 'cryptocurrency/listings/latest',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = StockResponse.fromJson(_result.data!);
-    bench.end('STOCK RESPONSE DESERIALIZING');
     return value;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
-    if (T != dynamic && !(requestOptions.responseType == ResponseType.bytes || requestOptions.responseType == ResponseType.stream)) {
+    if (T != dynamic &&
+        !(requestOptions.responseType == ResponseType.bytes ||
+            requestOptions.responseType == ResponseType.stream)) {
       if (T == String) {
         requestOptions.responseType = ResponseType.plain;
       } else {

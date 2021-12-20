@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:high_low/domain/crypto/dto/stock_response.dart';
-import 'package:high_low/service/logs/benchmark.dart';
 import 'package:retrofit/http.dart';
 
 part 'crypto_provider.g.dart';

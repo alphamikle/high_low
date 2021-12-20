@@ -50,12 +50,17 @@ class _MainViewState extends State<MainView> {
     );
   }
 
+  Future<void> _launchMainFrontend() async {
+    final MainFrontend mainFrontend = Provider.of(context, listen: false);
+    await mainFrontend.launch();
+    await mainFrontend.loadStocks();
+  }
+
   @override
   void initState() {
     super.initState();
-    final MainFrontend mainFrontend = Provider.of(context, listen: false);
-    mainFrontend.launch().then((_) => mainFrontend.loadStocks());
-    _eventSubscription = mainFrontend.subscribeOnEvent(
+    _launchMainFrontend();
+    _eventSubscription = Provider.of<MainFrontend>(context, listen: false).subscribeOnEvent(
       listener: _onLoadingDone,
       event: MainEvent.updateFilteredStocks,
       onEveryEvent: true,
@@ -71,26 +76,24 @@ class _MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer(
-        builder: (BuildContext context, MainFrontend state, Widget? child) => AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          child: state.isLaunching
-              ? Center(
-                  child: Text(Messages.of(context).main.loading),
-                )
-              : CustomScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  slivers: [
-                    const MainHeader(),
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        _stockItemBuilder,
-                        childCount: _mainFrontend.stocks.length,
-                      ),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        child: _mainFrontend.isLaunching
+            ? Center(
+                child: Text(Messages.of(context).main.loading),
+              )
+            : CustomScrollView(
+                physics: const BouncingScrollPhysics(),
+                slivers: [
+                  const MainHeader(),
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      _stockItemBuilder,
+                      childCount: _mainFrontend.stocks.length,
                     ),
-                  ],
-                ),
-        ),
+                  ),
+                ],
+              ),
       ),
     );
   }
