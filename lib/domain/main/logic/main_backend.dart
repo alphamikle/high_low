@@ -1,11 +1,9 @@
 import 'dart:async';
 
+import '../../crypto/logic/crypto_provider.dart';
 import 'package:isolator/isolator.dart';
 
-import '../../../service/config/config.dart';
 import '../../crypto/dto/stock_item.dart';
-import '../../crypto/dto/stock_response.dart';
-import '../../crypto/logic/crypto_provider.dart';
 import 'main_frontend.dart';
 
 typedef StockItemFilter = bool Function(StockItem);
@@ -21,40 +19,18 @@ class MainBackend extends Backend {
   final List<StockItem> _stocks = [];
   Timer? _searchTimer;
 
-  Future<ActionResponse<void>> _loadStocks({required MainEvent event, void data}) async {
+  Future<ActionResponse<StockItem>> _loadStocks({required MainEvent event, void data}) async {
     await send(event: MainEvent.startLoadingStocks, sendDirectly: true);
-    late final StockResponse response;
     try {
-      response = await _cryptoProvider.fetchLatestData(token: Config.apiToken);
+      final List<StockItem> stockItems = await _cryptoProvider.fetchLatestData();
+      _stocks.clear();
+      _stocks.addAll(stockItems);
     } catch (error) {
-      // Handle error
-      print(error);
+      await send(event: MainEvent.endLoadingStocks, sendDirectly: true);
       rethrow;
     }
-    final List<StockItem> stocks = response.data;
-    _stocks.clear();
-    _stocks.addAll(stocks);
-    const bool sendViaChunks = false;
-    if (sendViaChunks) {
-      await send(
-        event: MainEvent.loadStocks,
-        data: ActionResponse.chunks(
-          Chunks(
-            data: _stocks,
-            updateAfterFirstChunk: true,
-            size: 100,
-            delay: const Duration(milliseconds: 8),
-          ),
-        ),
-      );
-    } else {
-      await send(
-        event: MainEvent.loadStocks,
-        data: ActionResponse.list(_stocks),
-      );
-    }
     await send(event: MainEvent.endLoadingStocks, sendDirectly: true);
-    return ActionResponse.empty();
+    return ActionResponse.list(_stocks);
   }
 
   ActionResponse<StockItem> _filterStocks({required MainEvent event, required String data}) {
@@ -74,12 +50,12 @@ class MainBackend extends Backend {
   }
 
   StockItemFilter _stockFilterPredicate(String searchSubString) {
-    final String query = searchSubString.toLowerCase();
+    final RegExp filterRegExp = RegExp(searchSubString, caseSensitive: false, unicode: true);
     return (StockItem item) {
       if (searchSubString.isEmpty) {
         return true;
       }
-      return item.symbol.toLowerCase().contains(query) || item.name.toLowerCase().contains(query);
+      return filterRegExp.hasMatch(item.symbol) || filterRegExp.hasMatch(item.name);
     };
   }
 

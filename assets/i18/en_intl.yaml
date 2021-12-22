@@ -7,6 +7,10 @@ main:
       one: We found ${howMany} item
       two: We found ${howMany} items
       other: We found ${howMany} items
+    secret: It seems - you found a secret (42)
+  errors:
+    loadingError: Cryptocurrency load failed
+  repeat: Reload
 
 common:
   currency: '\$'

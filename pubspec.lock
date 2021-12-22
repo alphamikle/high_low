@@ -684,6 +684,13 @@ packages:
       relative: true
     source: path
     version: "2.0.2"
+  yalo_assets:
+    dependency: "direct main"
+    description:
+      path: ".yalo_assets"
+      relative: true
+    source: path
+    version: "1.0.0"
   yalo_locale:
     dependency: "direct main"
     description:

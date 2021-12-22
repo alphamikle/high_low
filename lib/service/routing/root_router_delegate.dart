@@ -1,6 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import '../../domain/notification/logic/notification_service.dart';
+import '../di/registrations.dart';
+import '../theme/app_theme.dart';
+import '../tools/localization_wrapper.dart';
+import 'package:provider/provider.dart';
 
 import '../../domain/main/ui/main_view.dart';
 import '../di/di.dart';
@@ -50,13 +55,22 @@ class RootRouterDelegate extends RouterDelegate<RouteConfiguration> with ChangeN
 
   @override
   Widget build(BuildContext context) {
-    return Navigator(
-      key: navigatorKey,
-      pages: [
-        pageBuilder.buildUnAnimatedPage(const MainView(), name: Routes.root()),
-        ...pages,
+    initUiDependencies(context);
+
+    return MultiProvider(
+      providers: [
+        Provider(create: (BuildContext context) => AppTheme(context)),
+        Provider.value(value: Di.get<NotificationService>()),
+        Provider.value(value: Di.get<LocalizationWrapper>()),
       ],
-      onPopPage: onPopRoute,
+      builder: (BuildContext context, Widget? child) => Navigator(
+        key: navigatorKey,
+        pages: [
+          pageBuilder.buildUnAnimatedPage(const MainView(), name: Routes.root()),
+          ...pages,
+        ],
+        onPopPage: onPopRoute,
+      ),
     );
   }
 }

@@ -18,10 +18,10 @@ class StockItemTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextStyle priceStyle = TextStyle(
       fontWeight: FontWeight.w600,
-      color: item.usdPrices.diff24h >= 0 ? AppTheme.of(context).priceUpColor : AppTheme.of(context).priceDownColor,
+      color: item.priceDiffInPercents >= 0 ? AppTheme.of(context).priceUpColor : AppTheme.of(context).priceDownColor,
       fontSize: 14,
     );
-    final double price = item.usdPrices.price;
+    final double price = item.price;
     final int zeros = Utils.countZeroAfterComma(price);
     final String prettyPrice = (zeros == 0 ? Utils.formatAsCurrency(price, symbol: '') : price.toStringAsExponential(2)).trim();
 
@@ -39,9 +39,7 @@ class StockItemTile extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(12),
               child: Center(
-                child: Image.network(
-                  item.imageUrl(128),
-                ),
+                child: Image.network(item.imageUrl(128)),
               ),
             ),
           ),
@@ -89,7 +87,7 @@ class StockItemTile extends StatelessWidget {
         Expanded(
           flex: 3,
           child: Text(
-            '${Utils.formatAsCurrency(item.usdPrices.diff24h, symbol: '')}%',
+            '${Utils.formatAsCurrency(item.priceDiffInPercents, symbol: '')}%',
             style: priceStyle,
             textAlign: TextAlign.end,
           ),

@@ -34,4 +34,20 @@ class AppTheme {
   Color get priceDownColor {
     return const Color.fromRGBO(255, 70, 110, 1);
   }
+
+  Color get errorColor {
+    return const Color.fromRGBO(226, 88, 34, 1);
+  }
+
+  Color get okColor {
+    return const Color.fromRGBO(0, 148, 52, 1.0);
+  }
+
+  Color get buttonColor {
+    return titleColor;
+  }
+
+  Color get splashColor {
+    return buttonColor.withOpacity(0.15);
+  }
 }

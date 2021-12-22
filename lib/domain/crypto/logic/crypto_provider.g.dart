@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'crypto_provider_native.dart';
+part of 'crypto_provider.dart';
 
 // **************************************************************************
 // RetrofitGenerator
 // **************************************************************************
 
-class _CryptoProviderNative implements CryptoProviderNative {
-  _CryptoProviderNative(this._dio, {this.baseUrl}) {
-    baseUrl ??= 'https://pro-api.coinmarketcap.com/v1/';
+class _CryptoProvider implements CryptoProvider {
+  _CryptoProvider(this._dio, {this.baseUrl}) {
+    baseUrl ??= 'https://api.coingecko.com/api/v3/';
   }
 
   final Dio _dio;
@@ -16,19 +16,31 @@ class _CryptoProviderNative implements CryptoProviderNative {
   String? baseUrl;
 
   @override
-  Future<StockResponse> fetchLatestData({required token, limit = 100}) async {
+  Future<List<StockItem>> fetchLatestData(
+      {currency = 'usd',
+      order = 'market_cap_desc',
+      perPage = 1000,
+      page = 1,
+      priceChangePercentage = '24h'}) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'limit': limit};
-    final _headers = <String, dynamic>{r'X-CMC_PRO_API_KEY': token};
-    _headers.removeWhere((k, v) => v == null);
+    final queryParameters = <String, dynamic>{
+      r'vs_currency': currency,
+      r'order': order,
+      r'per_page': perPage,
+      r'page': page,
+      r'price_change_percentage': priceChangePercentage
+    };
+    final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<StockResponse>(
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<List<StockItem>>(
             Options(method: 'GET', headers: _headers, extra: _extra)
-                .compose(_dio.options, 'cryptocurrency/listings/latest',
+                .compose(_dio.options, 'coins/markets',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = StockResponse.fromJson(_result.data!);
+    var value = _result.data!
+        .map((dynamic i) => StockItem.fromJson(i as Map<String, dynamic>))
+        .toList();
     return value;
   }
 

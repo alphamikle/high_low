@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:intl/intl.dart';
 
 abstract class Utils {
@@ -14,5 +16,11 @@ abstract class Utils {
       return 0;
     }
     return zeroMatch.length;
+  }
+
+  static int randomIntBetween(int from, int to) {
+    assert(from <= to);
+    final double random = Random().nextDouble();
+    return from + (random * (to - from + 1)).floor();
   }
 }

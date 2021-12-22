@@ -1,9 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:high_low/service/ui/loaders/circle_indicator.dart';
+import '../../../service/ui/inputs/text_input.dart';
 import 'package:provider/provider.dart';
 import 'package:yalo_locale/lib.dart';
 
 import '../../../service/theme/app_theme.dart';
+import '../../../service/ui/loaders/circle_indicator.dart';
 import '../logic/main_frontend.dart';
 
 const double _searchFieldHeight = 77;
@@ -13,11 +16,9 @@ class MainHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double topPadding = MediaQuery.of(context).padding.top;
-    print('TOP HEADER PADDING: $topPadding');
     return SliverPersistentHeader(
       floating: true,
-      delegate: _MainHeaderDelegate(height: topPadding + _searchFieldHeight),
+      delegate: _MainHeaderDelegate(height: MediaQuery.of(context).padding.top + _searchFieldHeight),
     );
   }
 }
@@ -42,15 +43,6 @@ class _MainHeaderDelegate extends SliverPersistentHeaderDelegate {
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     final MainFrontend mainFrontend = Provider.of(context);
 
-    final InputBorder border = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: const BorderSide(
-        color: Colors.transparent,
-        style: BorderStyle.none,
-        width: 1,
-      ),
-    );
-
     return Container(
       height: minExtent,
       color: AppTheme.of(context).headerColor,
@@ -61,41 +53,17 @@ class _MainHeaderDelegate extends SliverPersistentHeaderDelegate {
           right: 8,
           bottom: 8,
         ),
-        child: Row(
-          children: [
-            Expanded(
-              child: TextFormField(
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: AppTheme.of(context).inputColor,
-                  border: border,
-                  enabledBorder: border,
-                  disabledBorder: border,
-                  errorBorder: border,
-                  focusedBorder: border,
-                  focusedErrorBorder: border,
-                  isDense: true,
-                  hintText: Messages.of(context).main.search.hint,
-                  suffixIcon: Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: CircleIndicator(
-                      color: AppTheme.of(context).titleColor,
-                      visible: mainFrontend.isStocksLoading,
-                    ),
-                  ),
-                  suffixIconConstraints: const BoxConstraints(
-                    maxHeight: 30,
-                    maxWidth: 30,
-                  ),
-                ),
-                style: TextStyle(
-                  color: AppTheme.of(context).titleColor,
-                  fontWeight: FontWeight.w500,
-                ),
-                controller: mainFrontend.searchController,
-              ),
+        child: TextInput(
+          hint: Messages.of(context).main.search.hint,
+          controller: mainFrontend.searchController,
+          suffixIcon: Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: CircleIndicator(
+              color: AppTheme.of(context).titleColor,
+              visible: mainFrontend.isStocksLoading,
             ),
-          ],
+          ),
+          backgroundColor: AppTheme.of(context).inputColor,
         ),
       ),
     );

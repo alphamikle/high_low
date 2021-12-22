@@ -1,17 +1,19 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
-import 'package:high_low/domain/crypto/logic/crypto_provider.dart';
-import 'package:high_low/domain/crypto/logic/crypto_provider_web.dart';
-import 'package:high_low/domain/main/logic/main_frontend.dart';
+import 'package:flutter/material.dart';
+import '../theme/app_theme.dart';
+import '../tools/localization_wrapper.dart';
+import 'package:yalo_assets/lib.dart';
 
-import '../../domain/crypto/logic/crypto_provider_native.dart';
+import '../../domain/crypto/logic/crypto_provider.dart';
+import '../../domain/main/logic/main_frontend.dart';
+import '../../domain/notification/logic/notification_service.dart';
 import '../routing/default_router_information_parser.dart';
 import '../routing/page_builder.dart';
 import '../routing/root_router_delegate.dart';
 import 'di.dart';
 
 bool _isInitialized = false;
+bool _isUiInitialized = false;
 
 void initDependencies() {
   if (_isInitialized) {
@@ -34,6 +36,16 @@ void initDependencies() {
             ),
           ),
       asBuilder: true);
-  Di.reg<CryptoProvider>(() => kIsWeb ? CryptoProviderWeb(Di.get()) : CryptoProviderNative(Di.get()), asBuilder: true);
+  Di.reg<CryptoProvider>(() => CryptoProvider(Di.get()));
   Di.reg(() => MainFrontend());
+  Di.reg(() => Assets());
+}
+
+void initUiDependencies(BuildContext context) {
+  if (_isUiInitialized) {
+    return;
+  }
+  Di.reg(() => AppTheme(context));
+  Di.reg(() => NotificationService(scaffoldMessenger: ScaffoldMessenger.of(context), appTheme: Di.get()));
+  Di.reg(() => LocalizationWrapper(context: context));
 }

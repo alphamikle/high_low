@@ -6,7 +6,8 @@ import 'package:intl/intl.dart';
       abstract class _MainSearch {
       late String hint;
         String result(int howMany);
-        }
+        late String secret;
+      }
       class _EnMainSearch extends _MainSearch {
       /// Description: ""
     /// Example: "Search"
@@ -25,10 +26,25 @@ import 'package:intl/intl.dart';
       other: 'We found ${howMany} items',
       desc: 'null',
     );
+      /// Description: ""
+    /// Example: "It seems - you found a secret (42)"
+    @override
+    final String secret = Intl.message('It seems - you found a secret (42)', name: 'secret', desc: '');
+      }
+      abstract class _MainErrors {
+      late String loadingError;
+      }
+      class _EnMainErrors extends _MainErrors {
+      /// Description: ""
+    /// Example: "Cryptocurrency load failed"
+    @override
+    final String loadingError = Intl.message('Cryptocurrency load failed', name: 'loadingError', desc: '');
       }
       abstract class _Main {
       late String loading;
       late _MainSearch search;
+      late _MainErrors errors;
+      late String repeat;
       }
       class _EnMain extends _Main {
       /// Description: ""
@@ -37,6 +53,12 @@ import 'package:intl/intl.dart';
     final String loading = Intl.message('Loading...', name: 'loading', desc: '');
       @override
     final _MainSearch search = _EnMainSearch();
+      @override
+    final _MainErrors errors = _EnMainErrors();
+      /// Description: ""
+    /// Example: "Reload"
+    @override
+    final String repeat = Intl.message('Reload', name: 'repeat', desc: '');
       }
       abstract class _Common {
       late String currency;
@@ -85,6 +107,16 @@ import 'package:intl/intl.dart';
       other: 'Мы нашли ${howMany} элементов',
       desc: 'null',
     );
+      /// Description: ""
+    /// Example: "Похоже, ты нашел секрет! (42)"
+    @override
+    final String secret = Intl.message('Похоже, ты нашел секрет! (42)', name: 'secret', desc: '');
+      }
+      class _RuMainErrors extends _MainErrors {
+      /// Description: ""
+    /// Example: "Загрузка крипты не удалась"
+    @override
+    final String loadingError = Intl.message('Загрузка крипты не удалась', name: 'loadingError', desc: '');
       }
       class _RuMain extends _Main {
       /// Description: ""
@@ -93,6 +125,12 @@ import 'package:intl/intl.dart';
     final String loading = Intl.message('Загрузка...', name: 'loading', desc: '');
       @override
     final _MainSearch search = _RuMainSearch();
+      @override
+    final _MainErrors errors = _RuMainErrors();
+      /// Description: ""
+    /// Example: "Перезагрузить"
+    @override
+    final String repeat = Intl.message('Перезагрузить', name: 'repeat', desc: '');
       }
       class _RuCommon extends _Common {
       /// Description: ""

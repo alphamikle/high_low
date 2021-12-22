@@ -1,7 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import '../../notification/logic/notification_service.dart';
+import '../../../service/tools/localization_wrapper.dart';
 import 'package:isolator/isolator.dart';
+import 'package:isolator/next/maybe.dart';
 
 import '../../../service/di/di.dart';
 import '../../../service/di/registrations.dart';
@@ -19,22 +23,55 @@ enum MainEvent {
 
 int launchCount = 0;
 
+const int _magicVariable = 42;
+
 class MainFrontend with Frontend, ChangeNotifier {
+  late final NotificationService _notificationService;
+  late final LocalizationWrapper _localizationWrapper;
+
+  final List<StockItem> stocks = [];
   bool isLaunching = true;
   bool isStocksLoading = false;
-  final List<StockItem> stocks = [];
+  bool errorOnLoadingStocks = false;
+  bool isSecretFounded = false;
   TextEditingController searchController = TextEditingController();
+  TextEditingController tokenController = TextEditingController();
 
   bool _isInLaunchProcess = false;
   bool _isLaunched = false;
   String _prevSearch = '';
 
-  Future<void> loadStocks() => run(event: MainEvent.loadStocks);
+  Future<void> loadStocks() async {
+    errorOnLoadingStocks = false;
+    final Maybe<StockItem> stocks = await run(event: MainEvent.loadStocks);
+    if (stocks.hasList) {
+      _update(() {
+        this.stocks.clear();
+        this.stocks.addAll(stocks.list);
+      });
+    }
+    if (stocks.hasError) {
+      _update(() {
+        errorOnLoadingStocks = true;
+      });
+      await _notificationService.showSnackBar(content: _localizationWrapper.loc.main.errors.loadingError);
+    }
+  }
 
-  Future<void> launch() async {
+  void resetSecret() => _update(() {
+        isSecretFounded = false;
+      });
+
+  Future<void> launch({
+    required NotificationService notificationService,
+    required LocalizationWrapper localizationWrapper,
+  }) async {
     if (!isLaunching || _isLaunched || _isInLaunchProcess) {
       return;
     }
+    _notificationService = notificationService;
+    _localizationWrapper = localizationWrapper;
+
     _isInLaunchProcess = true;
     searchController.addListener(_filterStocks);
     await initBackend(initializer: _launch);
@@ -50,10 +87,11 @@ class MainFrontend with Frontend, ChangeNotifier {
     }
   }
 
-  void _setLoadedStocks({required MainEvent event, required List<StockItem> data}) {
+  void _setFilteredStocks({required MainEvent event, required List<StockItem> data}) {
     _update(() {
       stocks.clear();
       stocks.addAll(data);
+      isSecretFounded = data.length == _magicVariable;
     });
   }
 
@@ -81,9 +119,8 @@ class MainFrontend with Frontend, ChangeNotifier {
 
   @override
   void initActions() {
-    whenEventCome(MainEvent.loadStocks).run(_setLoadedStocks);
     whenEventCome(MainEvent.startLoadingStocks).run(_startLoadingStocks);
     whenEventCome(MainEvent.endLoadingStocks).run(_endLoadingStocks);
-    whenEventCome(MainEvent.updateFilteredStocks).run(_setLoadedStocks);
+    whenEventCome(MainEvent.updateFilteredStocks).run(_setFilteredStocks);
   }
 }
