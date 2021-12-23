@@ -4,13 +4,14 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'service/di/registrations.dart';
 import 'package:provider/provider.dart';
 import 'package:yalo_assets/lib.dart';
+import 'package:yalo_locale/lib.dart';
 
 import 'domain/main/logic/main_frontend.dart';
 import 'high_low_app.dart';
 import 'service/di/di.dart';
+import 'service/di/registrations.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +33,11 @@ void main() {
         ],
         child: const HighLowApp(),
       ),
+      tools: const [
+        DeviceSection(),
+        SystemSection(),
+      ],
+      availableLocales: supportedLocales,
     ),
   );
 }

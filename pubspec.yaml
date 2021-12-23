@@ -27,6 +27,7 @@ dependencies:
   yalo_assets:
     path: ./.yalo_assets
   device_preview: ^1.0.0
+  google_fonts: ^2.1.1
 
 dependency_overrides:
   isolator:
