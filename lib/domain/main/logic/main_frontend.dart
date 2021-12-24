@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import '../../notification/logic/notification_service.dart';
-import '../../../service/tools/localization_wrapper.dart';
 import 'package:isolator/isolator.dart';
 import 'package:isolator/next/maybe.dart';
 
 import '../../../service/di/di.dart';
 import '../../../service/di/registrations.dart';
+import '../../../service/tools/localization_wrapper.dart';
 import '../../crypto/dto/stock_item.dart';
+import '../../notification/logic/notification_service.dart';
 import 'main_backend.dart';
 
 enum MainEvent {

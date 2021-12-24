@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:high_low/service/tools/utils.dart';
-import '../../crypto/dto/stock_item.dart';
-import '../logic/main_frontend.dart';
-import 'main_header.dart';
-import 'stock_item_tile.dart';
-import '../../notification/logic/notification_service.dart';
-import '../../../service/theme/app_theme.dart';
 import 'package:isolator/next/frontend/frontend_event_subscription.dart';
 import 'package:provider/provider.dart';
 import 'package:yalo_assets/lib.dart';
 import 'package:yalo_locale/lib.dart';
+
+import '../../../service/theme/app_theme.dart';
+import '../../../service/tools/utils.dart';
+import '../../crypto/dto/stock_item.dart';
+import '../../notification/logic/notification_service.dart';
+import '../logic/main_frontend.dart';
+import 'main_header.dart';
+import 'stock_item_tile.dart';
 
 class MainView extends StatefulWidget {
   const MainView({Key? key}) : super(key: key);
