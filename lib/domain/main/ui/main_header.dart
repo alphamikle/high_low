@@ -1,11 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import '../../../service/ui/inputs/text_input.dart';
 import 'package:provider/provider.dart';
 import 'package:yalo_locale/lib.dart';
 
 import '../../../service/theme/app_theme.dart';
+import '../../../service/ui/inputs/text_input.dart';
 import '../../../service/ui/loaders/circle_indicator.dart';
 import '../logic/main_frontend.dart';
 

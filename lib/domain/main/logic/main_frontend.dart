@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:isolator/isolator.dart';
-import 'package:isolator/next/maybe.dart';
+import 'package:isolator/src/maybe.dart';
 
 import '../../../service/di/di.dart';
 import '../../../service/di/registrations.dart';
@@ -54,7 +54,8 @@ class MainFrontend with Frontend, ChangeNotifier {
       _update(() {
         errorOnLoadingStocks = true;
       });
-      await _notificationService.showSnackBar(content: _localizationWrapper.loc.main.errors.loadingError);
+      await _notificationService.showSnackBar(
+          content: _localizationWrapper.loc.main.errors.loadingError);
     }
   }
 

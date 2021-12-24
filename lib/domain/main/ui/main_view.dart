@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:isolator/next/frontend/frontend_event_subscription.dart';
+import 'package:isolator/src/frontend/frontend_event_subscription.dart';
 import 'package:provider/provider.dart';
 import 'package:yalo_assets/lib.dart';
 import 'package:yalo_locale/lib.dart';
@@ -43,7 +43,8 @@ class _MainViewState extends State<MainView> {
     final MainFrontend mainFrontend = Provider.of<MainFrontend>(context, listen: false);
     final LocalizationMessages loc = Messages.of(context);
     final int stocksCount = mainFrontend.stocks.length;
-    final String content = mainFrontend.isSecretFounded ? loc.main.search.secret : loc.main.search.result(stocksCount);
+    final String content =
+        mainFrontend.isSecretFounded ? loc.main.search.secret : loc.main.search.result(stocksCount);
     Provider.of<NotificationService>(context, listen: false).showSnackBar(
       content: content,
       backgroundColor: AppTheme.of(context, listen: false).okColor,
@@ -52,7 +53,9 @@ class _MainViewState extends State<MainView> {
 
   Future<void> _launchMainFrontend() async {
     final MainFrontend mainFrontend = Provider.of(context, listen: false);
-    await mainFrontend.launch(notificationService: Provider.of(context, listen: false), localizationWrapper: Provider.of(context, listen: false));
+    await mainFrontend.launch(
+        notificationService: Provider.of(context, listen: false),
+        localizationWrapper: Provider.of(context, listen: false));
     await mainFrontend.loadStocks();
   }
 
@@ -77,7 +80,8 @@ class _MainViewState extends State<MainView> {
   Widget build(BuildContext context) {
     final Assets assets = Provider.of<Assets>(context, listen: false);
     final AppTheme theme = AppTheme.of(context);
-    final MaterialStateProperty<Color> buttonColor = MaterialStateProperty.resolveWith((states) => theme.buttonColor);
+    final MaterialStateProperty<Color> buttonColor =
+        MaterialStateProperty.resolveWith((states) => theme.buttonColor);
     final ButtonStyle buttonStyle = ButtonStyle(
       foregroundColor: buttonColor,
       overlayColor: MaterialStateProperty.resolveWith((states) => theme.splashColor),
@@ -116,7 +120,8 @@ class _MainViewState extends State<MainView> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
-                child: Image.asset(notFoundImages[Utils.randomIntBetween(0, notFoundImages.length - 1)]),
+                child: Image.asset(
+                    notFoundImages[Utils.randomIntBetween(0, notFoundImages.length - 1)]),
               ),
               TextButton(
                 onPressed: _mainFrontend.loadStocks,
@@ -137,7 +142,8 @@ class _MainViewState extends State<MainView> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
-                child: Image.asset(secretImages[Utils.randomIntBetween(0, secretImages.length - 1)]),
+                child:
+                    Image.asset(secretImages[Utils.randomIntBetween(0, secretImages.length - 1)]),
               ),
               TextButton(
                 onPressed: _mainFrontend.resetSecret,
