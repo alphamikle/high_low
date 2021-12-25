@@ -43,11 +43,11 @@ class MainFrontend with Frontend, ChangeNotifier {
 
   Future<void> loadStocks() async {
     errorOnLoadingStocks = false;
-    final Maybe<StockItem> stocks = await run(event: MainEvent.loadStocks);
-    if (stocks.hasList) {
+    final Maybe<List<StockItem>> stocks = await run(event: MainEvent.loadStocks);
+    if (stocks.hasValue) {
       _update(() {
         this.stocks.clear();
-        this.stocks.addAll(stocks.list);
+        this.stocks.addAll(stocks.value);
       });
     }
     if (stocks.hasError) {
