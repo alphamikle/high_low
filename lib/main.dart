@@ -28,7 +28,7 @@ void main() {
       enabled: kIsWeb || Platform.isWindows || Platform.isLinux || Platform.isMacOS,
       builder: (BuildContext context) => MultiProvider(
         providers: [
-          ChangeNotifierProvider.value(value: Di.get<MainFrontend>()),
+          ChangeNotifierProvider.value(value: Di.get<CryptoCurrencyState>()),
           Provider.value(value: Di.get<Assets>()),
         ],
         child: const HighLowApp(),

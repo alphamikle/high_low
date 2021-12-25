@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
-import '../tools/localization_wrapper.dart';
 import 'package:yalo_assets/lib.dart';
 
 import '../../domain/crypto/logic/crypto_provider.dart';
@@ -10,6 +8,8 @@ import '../../domain/notification/logic/notification_service.dart';
 import '../routing/default_router_information_parser.dart';
 import '../routing/page_builder.dart';
 import '../routing/root_router_delegate.dart';
+import '../theme/app_theme.dart';
+import '../tools/localization_wrapper.dart';
 import 'di.dart';
 
 bool _isInitialized = false;
@@ -37,7 +37,7 @@ void initDependencies() {
           ),
       asBuilder: true);
   Di.reg<CryptoProvider>(() => CryptoProvider(Di.get()));
-  Di.reg(() => MainFrontend());
+  Di.reg(() => CryptoCurrencyState());
   Di.reg(() => Assets());
 }
 

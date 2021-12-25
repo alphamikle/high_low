@@ -39,7 +39,7 @@ class _MainHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final MainFrontend mainFrontend = Provider.of(context);
+    final CryptoCurrencyState mainFrontend = Provider.of(context);
 
     return Container(
       height: minExtent,

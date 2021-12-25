@@ -21,11 +21,7 @@ enum MainEvent {
   updateFilteredStocks,
 }
 
-int launchCount = 0;
-
-const int _magicVariable = 42;
-
-class MainFrontend with Frontend, ChangeNotifier {
+class CryptoCurrencyState with Frontend, ChangeNotifier {
   late final NotificationService _notificationService;
   late final LocalizationWrapper _localizationWrapper;
 
@@ -33,7 +29,6 @@ class MainFrontend with Frontend, ChangeNotifier {
   bool isLaunching = true;
   bool isStocksLoading = false;
   bool errorOnLoadingStocks = false;
-  bool isSecretFounded = false;
   TextEditingController searchController = TextEditingController();
   TextEditingController tokenController = TextEditingController();
 
@@ -43,11 +38,11 @@ class MainFrontend with Frontend, ChangeNotifier {
 
   Future<void> loadStocks() async {
     errorOnLoadingStocks = false;
-    final Maybe<StockItem> stocks = await run(event: MainEvent.loadStocks);
-    if (stocks.hasList) {
+    final Maybe<List<StockItem>> stocks = await run(event: MainEvent.loadStocks);
+    if (stocks.hasValue) {
       _update(() {
         this.stocks.clear();
-        this.stocks.addAll(stocks.list);
+        this.stocks.addAll(stocks.value);
       });
     }
     if (stocks.hasError) {
@@ -58,10 +53,6 @@ class MainFrontend with Frontend, ChangeNotifier {
           content: _localizationWrapper.loc.main.errors.loadingError);
     }
   }
-
-  void resetSecret() => _update(() {
-        isSecretFounded = false;
-      });
 
   Future<void> launch({
     required NotificationService notificationService,
@@ -92,7 +83,6 @@ class MainFrontend with Frontend, ChangeNotifier {
     _update(() {
       stocks.clear();
       stocks.addAll(data);
-      isSecretFounded = data.length == _magicVariable;
     });
   }
 

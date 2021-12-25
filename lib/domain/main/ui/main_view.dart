@@ -20,7 +20,7 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
-  MainFrontend get _mainFrontend => Provider.of(context);
+  CryptoCurrencyState get _mainFrontend => Provider.of(context);
   late final FrontendEventSubscription<MainEvent> _eventSubscription;
 
   Widget _stockItemBuilder(BuildContext context, int index) {
@@ -40,11 +40,10 @@ class _MainViewState extends State<MainView> {
   }
 
   void _onSearchEnd(MainEvent event) {
-    final MainFrontend mainFrontend = Provider.of<MainFrontend>(context, listen: false);
+    final CryptoCurrencyState mainFrontend = Provider.of<CryptoCurrencyState>(context, listen: false);
     final LocalizationMessages loc = Messages.of(context);
     final int stocksCount = mainFrontend.stocks.length;
-    final String content =
-        mainFrontend.isSecretFounded ? loc.main.search.secret : loc.main.search.result(stocksCount);
+    final String content = loc.main.search.result(stocksCount);
     Provider.of<NotificationService>(context, listen: false).showSnackBar(
       content: content,
       backgroundColor: AppTheme.of(context, listen: false).okColor,
@@ -52,10 +51,8 @@ class _MainViewState extends State<MainView> {
   }
 
   Future<void> _launchMainFrontend() async {
-    final MainFrontend mainFrontend = Provider.of(context, listen: false);
-    await mainFrontend.launch(
-        notificationService: Provider.of(context, listen: false),
-        localizationWrapper: Provider.of(context, listen: false));
+    final CryptoCurrencyState mainFrontend = Provider.of(context, listen: false);
+    await mainFrontend.launch(notificationService: Provider.of(context, listen: false), localizationWrapper: Provider.of(context, listen: false));
     await mainFrontend.loadStocks();
   }
 
@@ -63,7 +60,7 @@ class _MainViewState extends State<MainView> {
   void initState() {
     super.initState();
     _launchMainFrontend();
-    _eventSubscription = Provider.of<MainFrontend>(context, listen: false).subscribeOnEvent(
+    _eventSubscription = Provider.of<CryptoCurrencyState>(context, listen: false).subscribeOnEvent(
       listener: _onSearchEnd,
       event: MainEvent.updateFilteredStocks,
       onEveryEvent: true,
@@ -80,8 +77,7 @@ class _MainViewState extends State<MainView> {
   Widget build(BuildContext context) {
     final Assets assets = Provider.of<Assets>(context, listen: false);
     final AppTheme theme = AppTheme.of(context);
-    final MaterialStateProperty<Color> buttonColor =
-        MaterialStateProperty.resolveWith((states) => theme.buttonColor);
+    final MaterialStateProperty<Color> buttonColor = MaterialStateProperty.resolveWith((states) => theme.buttonColor);
     final ButtonStyle buttonStyle = ButtonStyle(
       foregroundColor: buttonColor,
       overlayColor: MaterialStateProperty.resolveWith((states) => theme.splashColor),
@@ -92,16 +88,6 @@ class _MainViewState extends State<MainView> {
       assets.notFound2,
       assets.notFound3,
       assets.notFound4,
-    ].map((e) => e.replaceFirst('assets/', '')).toList();
-    final List<String> secretImages = [
-      assets.secret1,
-      assets.secret2,
-      assets.secret3,
-      assets.secret4,
-      assets.secret5,
-      assets.secret6,
-      assets.secret7,
-      assets.secret8,
     ].map((e) => e.replaceFirst('assets/', '')).toList();
 
     Widget body;
@@ -120,33 +106,10 @@ class _MainViewState extends State<MainView> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
-                child: Image.asset(
-                    notFoundImages[Utils.randomIntBetween(0, notFoundImages.length - 1)]),
+                child: Image.asset(notFoundImages[Utils.randomIntBetween(0, notFoundImages.length - 1)]),
               ),
               TextButton(
                 onPressed: _mainFrontend.loadStocks,
-                style: buttonStyle,
-                child: Text(Messages.of(context).main.repeat),
-              ),
-            ],
-          ),
-        ),
-      );
-    } else if (_mainFrontend.isSecretFounded) {
-      body = Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child:
-                    Image.asset(secretImages[Utils.randomIntBetween(0, secretImages.length - 1)]),
-              ),
-              TextButton(
-                onPressed: _mainFrontend.resetSecret,
                 style: buttonStyle,
                 child: Text(Messages.of(context).main.repeat),
               ),

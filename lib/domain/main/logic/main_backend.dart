@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import '../../crypto/logic/crypto_provider.dart';
 import 'package:isolator/isolator.dart';
 
 import '../../crypto/dto/stock_item.dart';
+import '../../crypto/logic/crypto_provider.dart';
 import 'main_frontend.dart';
 
 typedef StockItemFilter = bool Function(StockItem);
@@ -19,7 +19,7 @@ class MainBackend extends Backend {
   final List<StockItem> _stocks = [];
   Timer? _searchTimer;
 
-  Future<ActionResponse<StockItem>> _loadStocks({required MainEvent event, void data}) async {
+  Future<List<StockItem>> _loadStocks({required MainEvent event, void data}) async {
     await send(event: MainEvent.startLoadingStocks, sendDirectly: true);
     try {
       final List<StockItem> stockItems = await _cryptoProvider.fetchLatestData();
@@ -30,23 +30,23 @@ class MainBackend extends Backend {
       rethrow;
     }
     await send(event: MainEvent.endLoadingStocks, sendDirectly: true);
-    return ActionResponse.list(_stocks);
+    return _stocks;
   }
 
-  ActionResponse<StockItem> _filterStocks({required MainEvent event, required String data}) {
+  void _filterStocks({required MainEvent event, required String data}) {
     final String searchSubString = data;
     send(event: MainEvent.startLoadingStocks);
     _searchTimer?.cancel();
     _searchTimer = Timer(const Duration(milliseconds: 500), () async {
       _searchTimer = null;
-      final List<StockItem> filteredStocks = _stocks.where(_stockFilterPredicate(searchSubString)).toList();
+      final List<StockItem> filteredStocks =
+          _stocks.where(_stockFilterPredicate(searchSubString)).toList();
       await send(
         event: MainEvent.updateFilteredStocks,
-        data: ActionResponse.list(filteredStocks),
+        data: filteredStocks,
       );
       await send(event: MainEvent.endLoadingStocks);
     });
-    return ActionResponse.empty();
   }
 
   StockItemFilter _stockFilterPredicate(String searchSubString) {
