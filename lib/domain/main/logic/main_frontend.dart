@@ -54,8 +54,7 @@ class MainFrontend with Frontend, ChangeNotifier {
       _update(() {
         errorOnLoadingStocks = true;
       });
-      await _notificationService.showSnackBar(
-          content: _localizationWrapper.loc.main.errors.loadingError);
+      await _notificationService.showSnackBar(content: _localizationWrapper.loc.main.errors.loadingError);
     }
   }
 
