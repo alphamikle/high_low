@@ -19,10 +19,13 @@ class RouteConfiguration {
   const RouteConfiguration.empty({
     required this.initialPath,
     required this.routeName,
-  }) : routeParams = const RouteParams(params: <String, String>{}, query: <String, String>{});
+  }) : routeParams = const RouteParams(
+            params: <String, String>{}, query: <String, String>{});
 
-  factory RouteConfiguration.unknown() => RouteConfiguration.empty(initialPath: Routes.unknown(), routeName: Routes.unknown());
-  factory RouteConfiguration.fromJson(Json json) => _$RouteConfigurationFromJson(json);
+  factory RouteConfiguration.unknown() => RouteConfiguration.empty(
+      initialPath: Routes.unknown(), routeName: Routes.unknown());
+  factory RouteConfiguration.fromJson(Json json) =>
+      _$RouteConfigurationFromJson(json);
 
   final String initialPath;
   final String routeName;

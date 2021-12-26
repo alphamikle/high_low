@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:high_low/domain/crypto/logic/coin_market_cap_ids.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../../service/types/types.dart';
+import '../logic/coin_market_cap_ids.dart';
 
 part 'stock_item.g.dart';
 
