@@ -24,7 +24,7 @@ class MainBackend extends Backend {
     try {
       final List<StockItem> stockItems = await _cryptoProvider.fetchLatestData();
       _stocks.clear();
-      _stocks.addAll(stockItems);
+      _stocks.addAll(stockItems.where((StockItem me) => me.isValid));
     } catch (error) {
       await send(event: MainEvent.endLoadingStocks, sendDirectly: true);
       rethrow;

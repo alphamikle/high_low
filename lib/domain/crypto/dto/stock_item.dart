@@ -6,6 +6,9 @@ import '../logic/coin_market_cap_ids.dart';
 
 part 'stock_item.g.dart';
 
+const String incorrectEmptyValue = '';
+const double incorrectZeroValue = 0;
+
 // BTC, ETH etc.
 typedef CryptoSymbol = String;
 
@@ -52,24 +55,26 @@ class StockItem {
 
   factory StockItem.fromJson(Json json) => _$StockItemFromJson(json);
 
+  @JsonKey(defaultValue: incorrectEmptyValue)
   final String name;
 
+  @JsonKey(defaultValue: incorrectEmptyValue)
   final CryptoSymbol symbol;
 
+  @JsonKey(defaultValue: incorrectZeroValue)
   @JsonKey(name: 'current_price')
   final double price;
 
-  @JsonKey(name: 'price_change_percentage_24h')
+  @JsonKey(name: 'price_change_percentage_24h', defaultValue: incorrectZeroValue)
   final double priceDiffInPercents;
 
   String imageUrl(int size) {
     assert(size > 0 && size < 250);
     final int id = coinMarketCapIds[symbol.toUpperCase()] ?? 1;
     return 'https://s2.coinmarketcap.com/static/img/coins/${size}x$size/$id.png';
-    // return 'https://cryptologos.cc/logos/${name.replaceAll(' ', '-').toLowerCase()}-${symbol.toLowerCase()}-logo.png';
   }
+
+  bool get isValid => name != incorrectEmptyValue && symbol != incorrectEmptyValue && price != incorrectZeroValue && priceDiffInPercents != incorrectZeroValue;
 
   Json toJson() => _$StockItemToJson(this);
 }
-
-// https://cryptoicons.org/api/icon/btc/128
