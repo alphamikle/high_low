@@ -61,8 +61,7 @@ class StockItem {
   @JsonKey(defaultValue: incorrectEmptyValue)
   final CryptoSymbol symbol;
 
-  @JsonKey(defaultValue: incorrectZeroValue)
-  @JsonKey(name: 'current_price')
+  @JsonKey(name: 'current_price', defaultValue: incorrectZeroValue)
   final double price;
 
   @JsonKey(name: 'price_change_percentage_24h', defaultValue: incorrectZeroValue)
